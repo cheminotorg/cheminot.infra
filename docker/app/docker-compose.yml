@@ -1,0 +1,13 @@
+version: '2'
+
+services:
+  web:
+    extends:
+      file: ../web/docker-compose.yml
+      service: web
+    links:
+      - db
+  db:
+    extends:
+      file: ../db/docker-compose.yml
+      service: db

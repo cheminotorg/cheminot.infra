@@ -1,0 +1,19 @@
+#!/bin/bash
+
+#/usr/local/etc/nginx/nginx.conf
+#/usr/local/etc/nginx/servers/
+
+docker-machine create --driver=virtualbox --virtualbox-memory "1024" --virtualbox-cpu-count "2" web1
+
+docker-machine create --driver=virtualbox --virtualbox-memory "1024" --virtualbox-cpu-count "2" web2
+
+eval "$(docker-machine env web1)"
+docker network create --driver bridge nw_cheminot
+cd ../web/
+docker-compose build
+docker-compose up
+
+eval "$(docker-machine env web2)"
+#docker network create --driver bridge nw_cheminot
+docker-compose build
+docker-compose up

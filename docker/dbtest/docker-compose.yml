@@ -1,0 +1,9 @@
+version: '2'
+
+services:
+  db:
+    container_name: neo4jtest
+    build:
+      context: .
+    ports:
+      - "7474:7474"

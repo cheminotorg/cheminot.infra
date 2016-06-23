@@ -1,0 +1,26 @@
+server {
+    listen 8080;
+
+    server_name cheminotweb;
+
+    # error_page 502 /500.html;
+
+    # location = /500.html {
+    #   root /home/sre/Dropbox/nginx/error_pages/;
+    # }
+
+    # access_log /home/sre/Dropbox/nginx/log/web-access.log;
+    # error_log  /home/sre/Dropbox/nginx/log/web-error.log;
+
+    location / {
+        proxy_pass         http://cheminotweb;
+        proxy_set_header   Host             $host;
+        proxy_set_header   X-Real-IP        $remote_addr;
+        proxy_set_header   X-Forwarded-For  $remote_addr;
+        proxy_set_header   Connection '';
+        proxy_http_version 1.1;
+        proxy_read_timeout 3600s;
+        proxy_send_timeout 3600s;
+        chunked_transfer_encoding off;
+    }
+}

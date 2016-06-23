@@ -1,0 +1,16 @@
+version: '2'
+
+services:
+  db:
+    container_name: neo4j
+    build:
+      context: .
+    ports:
+      - "7474:7474"
+    volumes:
+      - "/Users/sre/docker/:/data"
+
+networks:
+  default:
+    external:
+      name: nw_cheminot
