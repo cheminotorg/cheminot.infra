@@ -46,7 +46,7 @@ RUN echo "org.neo4j.server.webserver.address=0.0.0.0" >> neo4j-server.properties
 
 WORKDIR /app
 
-RUN wget https://raw.githubusercontent.com/cheminotorg/cheminot.db/master/scripts/neo4j -O neo4j
+RUN wget https://raw.githubusercontent.com/cheminotorg/cheminot.infra/master/deploy/neo4j -O neo4j
 
 RUN chmod +x ./neo4j
 

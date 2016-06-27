@@ -2,6 +2,8 @@
 
 PORT=7474
 DIR="/data"
+AUTH="false"
+HTTPS="false"
 
 while [[ $# -gt 1 ]]
 do
@@ -17,6 +19,16 @@ do
             DIR="$2"
             shift
             ;;
+
+        -a|--auth)
+            DIR="$2"
+            shift
+            ;;
+
+        -s|--https)
+            DIR="$2"
+            shift
+            ;;
         *)
             ;;
     esac
@@ -27,7 +39,17 @@ cp /etc/neo4j/neo4j-server.properties neo4j-server.properties.bk
 
 awk -F"=" -v value="$PORT" 'BEGIN {OFS="=";} /org.neo4j.server.webserver.port/{$2=value;print;next}1' neo4j-server.properties.bk > /etc/neo4j/neo4j-server.properties
 
-awk -F"=" -v value="$DIR/cheminot.db" 'BEGIN {OFS="=";} /org.neo4j.server.database.location/{$2=value;print;next}1' neo4j-server.properties.bk > /etc/neo4j/neo4j-server.properties
+cp /etc/neo4j/neo4j-server.properties neo4j-server.properties.bk
+
+awk -F"=" -v value="$DIR" 'BEGIN {OFS="=";} /org.neo4j.server.database.location/{$2=value;print;next}1' neo4j-server.properties.bk > /etc/neo4j/neo4j-server.properties
+
+cp /etc/neo4j/neo4j-server.properties neo4j-server.properties.bk
+
+awk -F"=" -v value="false" 'BEGIN {OFS="=";} /dbms.security.auth_enabled/{$2=value;print;next}1' neo4j-server.properties.bk > neo4j-server.properties
+
+cp /etc/neo4j/neo4j-server.properties neo4j-server.properties.bk
+
+awk -F"=" -v value="false" 'BEGIN {OFS="=";} /org.neo4j.server.webserver.https.enabled/{$2=value;print;next}1' neo4j-server.properties.bk > neo4j-server.properties
 
 rm neo4j-server.properties.bk
 

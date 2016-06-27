@@ -8,38 +8,42 @@ RUN apt-get -y install wget
 
 RUN apt-get -y install apt-transport-https ca-certificates
 
+# OPENJDK
+
+RUN apt-get -y install openjdk-7-jre
+
+# NEO4J
+
 RUN wget -O - https://debian.neo4j.org/neotechnology.gpg.key | apt-key add -
 
 RUN echo 'deb http://debian.neo4j.org/repo stable/' > /tmp/neo4j.list
 
 RUN mv /tmp/neo4j.list /etc/apt/sources.list.d
 
+RUN echo "deb https://apt.dockerproject.org/repo debian-jessie main" >> /etc/apt/sources.list.d/backports.list
+
 RUN apt-get -y update
+
+RUN apt-get -y --force-yes install docker-engine
 
 RUN apt-get -y install neo4j=2.3.1
 
-WORKDIR /etc/neo4j/
+# BUILD DB
 
-RUN cp neo4j-server.properties neo4j-server.properties.bk
+WORKDIR /db
 
-RUN awk -F"=" -v value="false" 'BEGIN {OFS="=";} /dbms.security.auth_enabled/{$2=value;print;next}1' neo4j-server.properties.bk > neo4j-server.properties
+RUN wget https://www.dropbox.com/s/n3jbkaw2bgrbg09/cheminotcli-latest.jar?dl=1 -O cheminotcli.jar
 
-RUN rm neo4j-server.properties.bk
+RUN java -jar ./cheminotcli.jar --out /db
 
-RUN cp neo4j-server.properties neo4j-server.properties.bk
-
-RUN awk -F"=" -v value="false" 'BEGIN {OFS="=";} /org.neo4j.server.webserver.https.enabled/{$2=value;print;next}1' neo4j-server.properties.bk > neo4j-server.properties
-
-RUN rm neo4j-server.properties.bk
-
-RUN echo "org.neo4j.server.webserver.address=0.0.0.0" >> neo4j-server.properties
+# ENTRYPOINT
 
 WORKDIR /app
 
-RUN wget https://raw.githubusercontent.com/cheminotorg/cheminot.db/master/scripts/neo4j -O neo4j
+RUN wget https://raw.githubusercontent.com/cheminotorg/cheminot.infra/master/deploy/neo4j -O neo4j
 
 RUN chmod +x ./neo4j
 
-CMD ["--path", "/data/world"]
+CMD ["--path", "/db/current/world/cheminot.db", "--auth", "false", "--https", "false"]
 
 ENTRYPOINT ["/app/neo4j"]
