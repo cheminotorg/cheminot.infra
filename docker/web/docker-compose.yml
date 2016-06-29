@@ -7,10 +7,3 @@ services:
       context: .
     ports:
       - "8080:8080"
-    external_links:
-      - neo4j
-
-networks:
-  default:
-    external:
-      name: nw_cheminot

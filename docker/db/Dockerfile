@@ -44,6 +44,6 @@ RUN wget https://raw.githubusercontent.com/cheminotorg/cheminot.infra/master/dep
 
 RUN chmod +x ./neo4j
 
-CMD ["--path", "/db/current/world/cheminot.db", "--auth", "false", "--https", "false"]
+CMD ["--path", "/db/current/cheminot.db", "--auth", "false", "--https", "false"]
 
 ENTRYPOINT ["/app/neo4j"]

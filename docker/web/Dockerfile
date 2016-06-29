@@ -12,6 +12,10 @@ RUN apt-get -y install openjdk-7-jre
 
 WORKDIR /app
 
-RUN wget https://www.dropbox.com/s/arawxpbz6bwyhbx/cheminotweb-latest.jar?dl=1 -O cheminotweb.jar
+RUN wget https://www.dropbox.com/s/vvykp2168byj4wa/cheminotweb-latest.jar?dl=1 -O cheminotweb.jar
+
+RUN wget https://raw.githubusercontent.com/cheminotorg/cheminot.infra/master/docker/web/application.json
+
+CMD ["--dbhost", "db"]
 
 ENTRYPOINT [ "java", "-jar", "cheminotweb.jar"]

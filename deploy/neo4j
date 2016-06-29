@@ -1,5 +1,6 @@
 #!/bin/bash
 
+CONF_PATH=/etc/neo4j/neo4j-server.properties
 PORT=7474
 DIR="/data"
 AUTH="false"
@@ -21,12 +22,12 @@ do
             ;;
 
         -a|--auth)
-            DIR="$2"
+            AUTH="$2"
             shift
             ;;
 
         -s|--https)
-            DIR="$2"
+            HTTPS="$2"
             shift
             ;;
         *)
@@ -37,20 +38,24 @@ done
 
 cp /etc/neo4j/neo4j-server.properties neo4j-server.properties.bk
 
-awk -F"=" -v value="$PORT" 'BEGIN {OFS="=";} /org.neo4j.server.webserver.port/{$2=value;print;next}1' neo4j-server.properties.bk > /etc/neo4j/neo4j-server.properties
+awk -F"=" -v value="$PORT" 'BEGIN {OFS="=";} /org.neo4j.server.webserver.port/{$2=value;print;next}1' neo4j-server.properties.bk > $CONF_PATH
 
 cp /etc/neo4j/neo4j-server.properties neo4j-server.properties.bk
 
-awk -F"=" -v value="$DIR" 'BEGIN {OFS="=";} /org.neo4j.server.database.location/{$2=value;print;next}1' neo4j-server.properties.bk > /etc/neo4j/neo4j-server.properties
+awk -F"=" -v value="$DIR" 'BEGIN {OFS="=";} /org.neo4j.server.database.location/{$2=value;print;next}1' neo4j-server.properties.bk > $CONF_PATH
 
 cp /etc/neo4j/neo4j-server.properties neo4j-server.properties.bk
 
-awk -F"=" -v value="false" 'BEGIN {OFS="=";} /dbms.security.auth_enabled/{$2=value;print;next}1' neo4j-server.properties.bk > neo4j-server.properties
+awk -F"=" -v value="$AUTH" 'BEGIN {OFS="=";} /dbms.security.auth_enabled/{$2=value;print;next}1' neo4j-server.properties.bk > $CONF_PATH
 
 cp /etc/neo4j/neo4j-server.properties neo4j-server.properties.bk
 
-awk -F"=" -v value="false" 'BEGIN {OFS="=";} /org.neo4j.server.webserver.https.enabled/{$2=value;print;next}1' neo4j-server.properties.bk > neo4j-server.properties
+awk -F"=" -v value="$HTTPS" 'BEGIN {OFS="=";} /org.neo4j.server.webserver.https.enabled/{$2=value;print;next}1' neo4j-server.properties.bk > $CONF_PATH
 
 rm neo4j-server.properties.bk
+
+echo "org.neo4j.server.webserver.address=0.0.0.0" >> $CONF_PATH
+
+cat $CONF_PATH
 
 /var/lib/neo4j/bin/neo4j console
