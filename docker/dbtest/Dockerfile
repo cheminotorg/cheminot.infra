@@ -20,7 +20,7 @@ RUN apt-get -y install neo4j=2.3.1
 
 WORKDIR /data
 
-RUN wget 'https://www.dropbox.com/s/hger98hlxarq8fp/cheminotdb-test.tar.gz?dl=1' -O cheminotdb-test.tar.gz
+RUN wget 'https://www.dropbox.com/s/csx6lyqw45jw8gu/cheminotdb-test.tar.gz?dl=1' -O cheminotdb-test.tar.gz
 
 RUN tar -xvf cheminotdb-test.tar.gz
 
